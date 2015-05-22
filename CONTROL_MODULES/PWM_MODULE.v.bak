@@ -1,0 +1,57 @@
+module PWM_MODULE (
+							clock,
+							DUTY,
+							PWM_HI_1,
+							PWM_HI_2,
+							PWM_LO_1,
+							PWM_LO_2,
+							ENDOFPERIOD
+						);
+
+
+input clock;
+
+input [31:0] DUTY;
+
+reg [31:0] duty_reg;
+
+output PWM_HI_1, PWM_HI_2, PWM_LO_1, PWM_LO_2;
+
+reg pwm_out;
+output reg ENDOFPERIOD;
+
+reg [31:0] counter = 0;
+
+assign PWM_HI_1 = pwm_out;
+assign PWM_HI_2 = ~pwm_out;
+assign PWM_LO_1 = ~pwm_out;
+assign PWM_LO_2 = pwm_out;
+
+always @ (posedge clock)
+begin
+
+	counter <= counter + 1;
+	
+	if (counter <= duty_reg)
+		begin
+			pwm_out <= 1;
+			ENDOFPERIOD <= 0;
+		end
+	else
+		begin
+			pwm_out <= 0;
+			ENDOFPERIOD <= 0;
+		end
+		
+	/**********************/
+	
+	if (counter > 4095)
+		begin
+			counter <= 0;
+			duty_reg <= DUTY;
+			ENDOFPERIOD <= 1;
+		end
+		
+end
+
+endmodule

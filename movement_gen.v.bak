@@ -1,0 +1,25 @@
+module MOVEMENT_GEN (clock, button, MOVE);
+
+input clock, button;
+
+reg [2:0] state;
+
+output reg signed [31:0] MOVE;
+
+always @ (posedge clock)
+begin
+	
+	if (button) state <= state + 1;
+	
+	
+	if 		(state == 0) MOVE <= 0;
+	else if	(state == 1) MOVE <= 512;
+	else if	(state == 2) MOVE <= 1024;
+	else
+		begin
+			MOVE <= 0;
+			state <= 0;
+		end
+		
+end
+endmodule

@@ -1,0 +1,8 @@
+module LASER_PULSE_CONTROL (input clock, input [31:0] PULSE_LENGTH, output reg PULSE_OUT);
+
+always @(posedge clock)
+begin
+
+end
+
+endmodule

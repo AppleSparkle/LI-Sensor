@@ -1,0 +1,55 @@
+module signals_counter (	
+									input clock, reset, 
+									input REF, MES,
+									output [31:0] DIFF
+								);
+								
+								
+reg signed [31:0] ref_count, mes_count;
+reg signed [31:0] ref_stored, mes_stored;
+reg r_d, r_d_1, m_d, m_d_1;
+
+assign DIFF = ref_stored - mes_stored;
+								
+always @(posedge clock)
+begin
+
+	if (reset)
+		begin
+			ref_count	<= 0;
+			mes_count	<= 0;
+			DIFF			<= 0;
+			r_d			<= 0;
+			r_d_1			<= 0;
+			m_d			<= 0;
+			m_d_1			<= 0;	
+		end
+	else
+		begin
+			
+			r_d <= REF;
+			r_d_1 <= r_d;
+			if ((r_d == 1) && (r_d_1 == 0))
+				begin
+					ref_stored <= ref_count;
+					ref_count <= 0;
+				end
+			
+			m_d <= MES;
+			m_d_1 <= m_d;
+			if ((m_d == 1) && (m_d_1 == 0))
+				begin
+					mef_stored <= mef_count;
+					mef_count <= 0;
+				end
+		
+			if (REF) ref_count <= ref_count + 1;
+			if (MES) mes_count <= mes_count + 1; 
+			
+		end
+		
+end
+
+endmodule
+
+									
